@@ -1,71 +1,109 @@
-# 1. create a bash file to scaffold the project (setup_rag_app.sh)
 
+📜 setup.sh — Bootstrap Bash Script
+bash
+Copy
+Edit
 #!/bin/bash
 
-# Step 1: Check if conda is installed
-if ! command -v conda &> /dev/null; then
-    echo "❌ Conda is not installed. Please install Miniconda or Anaconda first."
-    exit 1
+# --- Ensure script is run from the project root ---
+cd "$(dirname "$0")"
+
+echo "🔧 Installing pyenv and Python 3.10.13..."
+
+# Install pyenv if not installed
+if ! command -v pyenv >/dev/null 2>&1; then
+  brew update
+  brew install pyenv
 fi
 
+# Initialize pyenv (for current shell)
+export PYENV_ROOT="$HOME/.pyenv"
+eval "$(pyenv init --path)"
+eval "$(pyenv init -)"
 
-# Step 2: Create new conda environment
-echo "📦 Creating new conda environment 'rag_env' with Python 3.10..."
-conda create -y -n rag_env python=3.10
+# Install and set Python 3.10.13
+if ! pyenv versions | grep -q "3.10.13"; then
+  pyenv install 3.10.13
+fi
+pyenv local 3.10.13
 
-# Step 3: Activate environment
-echo "🔁 Activating 'rag_env'..."
-source "$(conda info --base)/etc/profile.d/conda.sh"
-conda activate rag_env
+# Create virtual environment
+echo "🐍 Creating virtual environment..."
+python3.10 -m venv env
+source env/bin/activate
 
-# Step 4: Install faiss-cpu with conda
-echo "📦 Installing faiss-cpu via conda..."
-conda install -y -c pytorch faiss-cpu
+# Upgrade pip & install wheel
+pip install --upgrade pip wheel
 
-# Step 5: Install other dependencies with pip
-echo "📦 Installing Python dependencies with pip..."
-pip install \
-  langchain langchain-community langchain-core \
-  sentence-transformers \
-  pypdf \
-  streamlit fastapi uvicorn \
-  sqlite-utils \
-  ollama
+# Install dependencies
+echo "📦 Installing Python packages..."
+pip install -r requirements.txt
 
-# Step 6: Create project structure
-mkdir -p rag_app/{backend/{docs,vectorstore},frontend}
-touch rag_app/backend/{main.py,ingest.py,db.py}
-touch rag_app/frontend/app.py
-touch rag_app/requirements.txt
-touch rag_app/docker-compose.yaml
-touch rag_app/README.md
+echo "✅ Setup complete. 
 
-# Step 7: Write pip-installable requirements
-cat <<EOL > rag_app/requirements.txt
-# faiss-cpu must be installed via conda for compatibility
+### Activate env with: source env/bin/activate"
+### conda deactivate 
+
+📦 requirements.txt
 langchain
 langchain-community
-langchain-core
-sentence-transformers
+chromadb==0.4.22
 pypdf
-streamlit
-fastapi
-uvicorn
+tiktoken
+# openai  # Optional, fallback
+python-dotenv
+llama-index
 sqlite-utils
-ollama
-EOL
+numpy==1.26.4
+sentence-transformers==2.5.1
+transformers==4.37.2
+streamlit 
 
-echo "✅ Environment and project structure are ready."
-echo "📄 Add PDFs to: rag_app/backend/docs/"
-echo "💬 Edit main.py, ingest.py, and app.py with your app logic."
+🚀 Project Steps
+1. Clone/Create Project Folder
+bash
+Copy
+Edit
+mkdir rag-app 
+
+2. Save the setup.sh script
+Save the Bash script from above as setup.sh and run:
+
+bash
+Copy
+Edit
+chmod +x setup.sh
+./setup.sh
+
+3. Scaffold the Project
+Inside rag-app, run:
+
+bash
+Copy
+Edit
+mkdir -p data db rag
+touch main.py rag/__init__.py rag/ingest.py rag/qa.py rag/utils.py
+
+4. Install and Run Ollama (if not done)
+bash
+Copy
+Edit
+brew install ollama
+ollama run llama3
 
 
 
-# 2. Run 
+🧠 Sample Python Scripts
 
-bash setup_rag_app.sh
+rag/ingest.py
 
-# 3. create the project tree
+rag/qa.py
 
-tree llm-app
+main.py
+
+app.py
+
+🧪 Run the App
+
+streamlit run app.py
 
