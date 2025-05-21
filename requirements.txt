@@ -1,0 +1,13 @@
+langchain
+langchain-community
+chromadb==0.4.22
+pypdf
+tiktoken
+# openai  # Optional, fallback
+python-dotenv
+llama-index
+sqlite-utils
+numpy==1.26.4
+sentence-transformers==2.5.1
+transformers==4.37.2
+streamlit 

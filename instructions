@@ -1,0 +1,71 @@
+# 1. create a bash file to scaffold the project (setup_rag_app.sh)
+
+#!/bin/bash
+
+# Step 1: Check if conda is installed
+if ! command -v conda &> /dev/null; then
+    echo "❌ Conda is not installed. Please install Miniconda or Anaconda first."
+    exit 1
+fi
+
+
+# Step 2: Create new conda environment
+echo "📦 Creating new conda environment 'rag_env' with Python 3.10..."
+conda create -y -n rag_env python=3.10
+
+# Step 3: Activate environment
+echo "🔁 Activating 'rag_env'..."
+source "$(conda info --base)/etc/profile.d/conda.sh"
+conda activate rag_env
+
+# Step 4: Install faiss-cpu with conda
+echo "📦 Installing faiss-cpu via conda..."
+conda install -y -c pytorch faiss-cpu
+
+# Step 5: Install other dependencies with pip
+echo "📦 Installing Python dependencies with pip..."
+pip install \
+  langchain langchain-community langchain-core \
+  sentence-transformers \
+  pypdf \
+  streamlit fastapi uvicorn \
+  sqlite-utils \
+  ollama
+
+# Step 6: Create project structure
+mkdir -p rag_app/{backend/{docs,vectorstore},frontend}
+touch rag_app/backend/{main.py,ingest.py,db.py}
+touch rag_app/frontend/app.py
+touch rag_app/requirements.txt
+touch rag_app/docker-compose.yaml
+touch rag_app/README.md
+
+# Step 7: Write pip-installable requirements
+cat <<EOL > rag_app/requirements.txt
+# faiss-cpu must be installed via conda for compatibility
+langchain
+langchain-community
+langchain-core
+sentence-transformers
+pypdf
+streamlit
+fastapi
+uvicorn
+sqlite-utils
+ollama
+EOL
+
+echo "✅ Environment and project structure are ready."
+echo "📄 Add PDFs to: rag_app/backend/docs/"
+echo "💬 Edit main.py, ingest.py, and app.py with your app logic."
+
+
+
+# 2. Run 
+
+bash setup_rag_app.sh
+
+# 3. create the project tree
+
+tree llm-app
+
