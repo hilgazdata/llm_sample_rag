@@ -22,17 +22,26 @@ if ! pyenv versions | grep -q "3.10.13"; then
 fi
 pyenv local 3.10.13
 
-# Create virtual environment
-echo "🐍 Creating virtual environment..."
-python3.10 -m venv env
-source env/bin/activate
+# Create virtual environment if it doesn't exist
+if [ ! -d "env" ]; then
+  echo "🐍 Creating virtual environment..."
+  python3.10 -m venv env
+fi
 
 # Upgrade pip & install wheel
+echo "⬆️  Upgrading pip and installing wheel..."
+source env/bin/activate
 pip install --upgrade pip wheel
 
 # Install dependencies
 echo "📦 Installing Python packages..."
 pip install -r requirements.txt
 
-echo "✅ Setup complete. Activate env with: source env/bin/activate"
+echo ""
+echo "✅ Setup complete. Virtual environment is active."
+echo "You can now run Python commands within this shell."
+echo ""
+
+# Launch an interactive shell with the virtual environment activated
+exec $SHELL -i -c "source env/bin/activate; exec $SHELL"
 

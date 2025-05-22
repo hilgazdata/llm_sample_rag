@@ -1,93 +1,23 @@
 
-📜 setup.sh — Bootstrap Bash Script
-bash
-Copy
-Edit
-#!/bin/bash
-
-# --- Ensure script is run from the project root ---
-cd "$(dirname "$0")"
-
-echo "🔧 Installing pyenv and Python 3.10.13..."
-
-# Install pyenv if not installed
-if ! command -v pyenv >/dev/null 2>&1; then
-  brew update
-  brew install pyenv
-fi
-
-# Initialize pyenv (for current shell)
-export PYENV_ROOT="$HOME/.pyenv"
-eval "$(pyenv init --path)"
-eval "$(pyenv init -)"
-
-# Install and set Python 3.10.13
-if ! pyenv versions | grep -q "3.10.13"; then
-  pyenv install 3.10.13
-fi
-pyenv local 3.10.13
-
-# Create virtual environment
-echo "🐍 Creating virtual environment..."
-python3.10 -m venv env
-source env/bin/activate
-
-# Upgrade pip & install wheel
-pip install --upgrade pip wheel
-
-# Install dependencies
-echo "📦 Installing Python packages..."
-pip install -r requirements.txt
-
-echo "✅ Setup complete. 
-
-### Activate env with: source env/bin/activate"
-### conda deactivate 
-
-📦 requirements.txt
-langchain
-langchain-community
-chromadb==0.4.22
-pypdf
-tiktoken
-# openai  # Optional, fallback
-python-dotenv
-llama-index
-sqlite-utils
-numpy==1.26.4
-sentence-transformers==2.5.1
-transformers==4.37.2
-streamlit 
-
 🚀 Project Steps
 1. Clone/Create Project Folder
-bash
-Copy
-Edit
+
 mkdir rag-app 
 
 2. Save the setup.sh script
 Save the Bash script from above as setup.sh and run:
 
-bash
-Copy
-Edit
-chmod +x setup.sh
-./setup.sh
+chmod +x setup_rag_app.sh
+./setup_rag_app.sh
 
 3. Scaffold the Project
 Inside rag-app, run:
 
-bash
-Copy
-Edit
-mkdir -p data db rag
-touch main.py rag/__init__.py rag/ingest.py rag/qa.py rag/utils.py
+mkdir -p data db rag drift_data
+touch main.py app.py monitor.py rag/__init__.py rag/ingest.py rag/qa.py rag/utils.py
 
 4. Install and Run Ollama (if not done)
-bash
-Copy
-Edit
+
 brew install ollama
 ollama run llama3
 
