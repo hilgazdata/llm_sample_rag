@@ -1,3 +1,6 @@
+# this script is for Mac. On Windows, create a env with Python 3.10.13 and install the requirements.txt file.
+
+
 #!/bin/bash
 
 # --- Ensure script is run from the project root ---

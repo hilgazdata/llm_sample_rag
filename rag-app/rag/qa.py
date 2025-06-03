@@ -1,7 +1,9 @@
 from langchain.chains import RetrievalQA
-from langchain.llms import Ollama
+# from langchain.llms import Ollama
+from langchain_community.llms import Ollama
 from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import SentenceTransformerEmbeddings
+from rag.memory import build_qa_with_memory
 
 def build_qa():
     embedding = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
@@ -11,3 +13,4 @@ def build_qa():
     llm = Ollama(model="llama3")
     qa = RetrievalQA.from_chain_type(llm=llm, retriever=retriever)
     return qa
+    
